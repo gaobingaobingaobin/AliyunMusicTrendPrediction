@@ -1,0 +1,2 @@
+# AliyunMusicTrendPrediction
+天池大数据竞赛平台赛题-阿里云音乐艺人原创作品试听量预测
