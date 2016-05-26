@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import csv
 import MySQLdb
-import sys
 
 
 if __name__ == '__main__':
@@ -13,17 +12,17 @@ if __name__ == '__main__':
         cur = conn.cursor()
         conn.select_db('AliyunMusic')
         swap_list = []
-        with open('mars_tianchi_songs.csv', 'r') as fp:
-            for line in fp.readlines():
-                split_items = line.split(',')
-                swap_list.append((split_items[0], split_items[1],
-                                  split_items[2], split_items[3],
-                                  split_items[4], split_items[5]))
-                sql = "INSERT INTO mars_tianchi_songs(song_id, artist_id, publish_time, " \
-                      "song_init_plays, language_type, gender) VALUES(%s, %s, %s, %s, %s, %s);"
-                cur.executemany(sql, swap_list)
+        with open('mars_tianchi_user_actions.csv', 'r') as fp:
+            for line in csv.reader(fp, delimiter=',', quoting=csv.QUOTE_NONE):
+                swap_list.append((line[0], line[1], line[2],
+                                  line[3], line[4]))
+        sql = "INSERT INTO mars_tianchi_user_actions(user_id, song_id, gmt_create, " \
+              "action_type, ds) VALUES(%s, %s, %s, %s, %s);"
+        cur.executemany(sql, swap_list)
         conn.commit()
+        print "DataSet Has Been Inserted Into Database successfully!"
         cur.close()
         conn.close()
+        print "Remote MySQL Database Closed!"
     except MySQLdb.OperationalError, e:
         print e[1]
